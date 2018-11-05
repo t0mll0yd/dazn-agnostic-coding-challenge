@@ -9,7 +9,9 @@ jobs:
       TERM: dumb
     steps:
       - checkout
-      - run: ls
+      - run:
+          name: ls
+          command: ls
       - restore_cache:
           key:
             - sbt-{{ checksum "build.sbt" }}
