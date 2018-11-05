@@ -55,7 +55,7 @@ jobs:
       - run:
           name: Build & Push Image
           command: sbt docker:publish
-       - run:
+      - run:
           name: Deploy App
           command: aws ecs update-service --cluster dazn-cluster --service agnostic-coding-challenge-app --force-new-deployment
 
