@@ -10,18 +10,18 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key:
+          keys:
             - sbt-{{ checksum "build.sbt" }}
             - sbt-
       - run:
           name: Compile
           command: sbt compile
       - save_cache:
-          key: sbt-{{ checksum "build.sbt" }}
           paths:
             - "~/.ivy2/cache"
             - "~/.sbt"
             - "~/.m2"
+          key: sbt-{{ checksum "build.sbt" }}
       - run:
           name: Unit Test
           command: sbt test
