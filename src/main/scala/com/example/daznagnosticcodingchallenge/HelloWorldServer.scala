@@ -1,4 +1,4 @@
-package com.example.quickstart
+package com.example.daznagnosticcodingchallenge
 
 import cats.effect.{Effect, IO}
 import fs2.StreamApp

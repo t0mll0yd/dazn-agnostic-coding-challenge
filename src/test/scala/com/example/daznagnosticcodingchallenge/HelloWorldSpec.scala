@@ -1,4 +1,4 @@
-package com.example.quickstart
+package com.example.daznagnosticcodingchallenge
 
 import cats.effect.IO
 import org.http4s._
