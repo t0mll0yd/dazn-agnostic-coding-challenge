@@ -11,7 +11,7 @@ class HelloWorldService[F[_]: Effect] extends Http4sDsl[F] {
   val service: HttpService[F] = {
     HttpService[F] {
       case GET -> Root / "hello" / name =>
-        Ok(Json.obj("message" -> Json.fromString(s"Hello, ${name}... from the deploy pipeline!")))
+        Ok(Json.obj("message" -> Json.fromString(s"Hello, ${name}... from the deploy pipeline again!")))
     }
   }
 }
