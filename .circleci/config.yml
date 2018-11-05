@@ -9,38 +9,36 @@ jobs:
       TERM: dumb
     steps:
       - checkout
-      - run: |
-          ls
       - restore_cache:
-          key:
+          keys:
             - sbt-{{ checksum "build.sbt" }}
             - sbt-
       - run:
           name: Compile
           command: sbt compile
       - save_cache:
-          key: sbt-{{ checksum "build.sbt" }}
           paths:
             - "~/.ivy2/cache"
             - "~/.sbt"
             - "~/.m2"
+          key: sbt-{{ checksum "build.sbt" }}
       - run:
           name: Unit Test
           command: sbt test
-#      - persist_to_workspace:
-#          root: /home/circleci
-#          paths:
-#            - .
-#
-#  deploy:
-#    docker:
-#      - image: circleci/openjdk:8-jdk
-#    environment:
-#      JVM_OPTS: -Xmx3200m
-#      TERM: dumb
-#    steps:
-#      - attach_workspace:
-#          at: /home/circleci
+      - persist_to_workspace:
+          root: /home/circleci
+          paths:
+            - .
+
+  deploy:
+    docker:
+      - image: circleci/openjdk:8-jdk
+    environment:
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
+    steps:
+      - attach_workspace:
+          at: /home/circleci
       - setup_remote_docker
       - run:
           name: Install pip
@@ -56,16 +54,16 @@ jobs:
           command: $(aws ecr get-login --no-include-email)
       - run:
           name: Build & Push Image
-          command: sbt publish
+          command: sbt docker:publish
 
 workflows:
   version: 2
   build-deploy:
     jobs:
       - build
-#      - deploy:
-#          filters:
-#            branches:
-#              only: master
-#          requires:
-#            - build
+      - deploy:
+          filters:
+            branches:
+              only: master
+          requires:
+            - build
