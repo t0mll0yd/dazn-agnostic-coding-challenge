@@ -3,7 +3,10 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/sbt:1.2.3
+      - image: circleci/openjdk:8-jdk
+    environment:
+        JVM_OPTS: -Xmx3200m
+        TERM: dumb
     steps:
       - checkout
       - restore_cache:
