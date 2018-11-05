@@ -55,7 +55,7 @@ jobs:
           command: $(aws ecr get-login --no-include-email)
       - run:
           name: Build & Push Image
-          command: sbt publish
+          command: sbt docker:publish
 
 workflows:
   version: 2
