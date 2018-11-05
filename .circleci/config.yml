@@ -5,8 +5,8 @@ jobs:
     docker:
       - image: circleci/openjdk:8-jdk
     environment:
-        JVM_OPTS: -Xmx3200m
-        TERM: dumb
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
     steps:
       - checkout
       - restore_cache:
@@ -23,9 +23,46 @@ jobs:
       - run:
           name: Unit Test
           command: sbt test
+      - persist_to_workspace:
+          root: /home/circleci
+          paths:
+            - .
+
+  deploy:
+    docker:
+      - image: circleci/openjdk:8-jdk
+    environment:
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
+    steps:
+      - attach_workspace:
+          at: /home/circleci
+      - setup_remote_docker
+      - run:
+          name: Install pip
+          command: |
+            apt-get update
+            apt-get upgrade -y
+            apt-get install -y apt-utils
+            apt-get install -y python3 python3-pip vim make
+      - run:
+          name: Install awscli
+          command: sudo pip install awscli
+      - run:
+          name: Docker Login
+          command: $(aws ecr get-login --no-include-email)
+      - run:
+          name: Build & Push Image
+          command: sbt publish
 
 workflows:
   version: 2
   build-deploy:
     jobs:
       - build
+      - deploy:
+          filters:
+            branches:
+              only: master
+          requires:
+            - build

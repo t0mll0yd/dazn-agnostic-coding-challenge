@@ -1,8 +1,12 @@
+import com.typesafe.sbt.packager.docker.DockerPlugin.autoImport._
+
 val Http4sVersion = "0.18.19"
 val Specs2Version = "4.1.0"
 val LogbackVersion = "1.2.3"
 
 lazy val root = (project in file("."))
+  .enablePlugins(JavaAppPackaging)
+  .enablePlugins(DockerPlugin)
   .settings(
     organization := "com.example",
     name := "quickstart",
@@ -15,7 +19,10 @@ lazy val root = (project in file("."))
       "org.specs2"     %% "specs2-core"          % Specs2Version % "test",
       "ch.qos.logback"  %  "logback-classic"     % LogbackVersion
     ),
+    packageName in Docker := "agnostic",
+    dockerUpdateLatest in Docker := true,
+    dockerExposedPorts := Seq(8080),
+    dockerRepository in Docker := Some(sys.env.getOrElse("DOCKER_REGISTRY", "")),
     addCompilerPlugin("org.spire-math" %% "kind-projector"     % "0.9.6"),
-    addCompilerPlugin("com.olegpy"     %% "better-monadic-for" % "0.2.4")
+    addCompilerPlugin("com.olegpy"     %% "better-monadic-for" % "0.2.4"),
   )
-
