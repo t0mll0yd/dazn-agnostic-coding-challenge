@@ -9,7 +9,7 @@ jobs:
       TERM: dumb
     steps:
       - checkout
-      - run: ls
+      - run: sbt dockerRepository
       - restore_cache:
           keys:
             - sbt-{{ checksum "build.sbt" }}
