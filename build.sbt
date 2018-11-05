@@ -4,6 +4,8 @@ val Http4sVersion = "0.18.19"
 val Specs2Version = "4.1.0"
 val LogbackVersion = "1.2.3"
 
+val defaultDockerRegistry = "261496907632.dkr.ecr.us-east-2.amazonaws.com/dazn-coding-challenge"
+
 lazy val root = (project in file("."))
   .enablePlugins(JavaAppPackaging)
   .enablePlugins(DockerPlugin)
@@ -22,7 +24,7 @@ lazy val root = (project in file("."))
     packageName in Docker := "agnostic",
     dockerUpdateLatest in Docker := true,
     dockerExposedPorts := Seq(8080),
-    dockerRepository in Docker := Some(sys.env.getOrElse("DOCKER_REGISTRY", "")),
+    dockerRepository in Docker := Some(sys.env.getOrElse("DOCKER_REGISTRY", defaultDockerRegistry)),
     addCompilerPlugin("org.spire-math" %% "kind-projector"     % "0.9.6"),
     addCompilerPlugin("com.olegpy"     %% "better-monadic-for" % "0.2.4"),
   )
