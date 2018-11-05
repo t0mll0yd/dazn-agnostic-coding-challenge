@@ -23,20 +23,20 @@ jobs:
       - run:
           name: Unit Test
           command: sbt test
-      - persist_to_workspace:
-          root: /home/circleci
-          paths:
-            - .
-
-  deploy:
-    docker:
-      - image: circleci/openjdk:8-jdk
-    environment:
-      JVM_OPTS: -Xmx3200m
-      TERM: dumb
-    steps:
-      - attach_workspace:
-          at: /home/circleci
+#      - persist_to_workspace:
+#          root: /home/circleci
+#          paths:
+#            - .
+#
+#  deploy:
+#    docker:
+#      - image: circleci/openjdk:8-jdk
+#    environment:
+#      JVM_OPTS: -Xmx3200m
+#      TERM: dumb
+#    steps:
+#      - attach_workspace:
+#          at: /home/circleci
       - setup_remote_docker
       - run:
           name: Install pip
@@ -59,9 +59,9 @@ workflows:
   build-deploy:
     jobs:
       - build
-      - deploy:
-          filters:
-            branches:
-              only: master
-          requires:
-            - build
+#      - deploy:
+#          filters:
+#            branches:
+#              only: master
+#          requires:
+#            - build
