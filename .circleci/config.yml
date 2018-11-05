@@ -9,6 +9,7 @@ jobs:
       TERM: dumb
     steps:
       - checkout
+      - run: ls
       - restore_cache:
           keys:
             - sbt-{{ checksum "build.sbt" }}
