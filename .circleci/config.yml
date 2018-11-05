@@ -1,0 +1,28 @@
+version: 2
+
+jobs:
+  build:
+    docker:
+      - image: circleci/sbt:1.2.3
+    steps:
+      - checkout
+      - restore_cache:
+          key: sbt-cache
+      - run:
+          name: Compile
+          command: sbt compile
+      - save_cache:
+          key: sbt-cache
+          paths:
+            - "~/.ivy2/cache"
+            - "~/.sbt"
+            - "~/.m2"
+      - run:
+          name: Unit Test
+          command: sbt test
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build
