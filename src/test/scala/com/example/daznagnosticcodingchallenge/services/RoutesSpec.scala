@@ -4,6 +4,8 @@ import com.example.daznagnosticcodingchallenge.stores.Store
 import com.twitter.finagle.http.{BasicAuth, Method, Request}
 import com.twitter.util.{Await, Future}
 import org.specs2.mutable.Specification
+import org.json4s._
+import org.json4s.native.JsonMethods._
 
 // Returns a predefined set of streams, regardless of userId
 case class StubbedStore(streams: Set[String] = Set()) extends Store {
@@ -41,6 +43,7 @@ class RoutesSpec extends Specification {
 
       store.getStreamCalledWith must beNone
       store.addStreamCalledWith must beNone
+
       response.statusCode must beEqualTo(404)
     }
 
@@ -53,6 +56,7 @@ class RoutesSpec extends Specification {
 
       store.getStreamCalledWith must beNone
       store.addStreamCalledWith must beNone
+
       response.statusCode must beEqualTo(200)
     }
 
@@ -65,6 +69,7 @@ class RoutesSpec extends Specification {
 
       store.getStreamCalledWith must beNone
       store.addStreamCalledWith must beNone
+
       response.statusCode must beEqualTo(404)
     }
 
@@ -77,6 +82,7 @@ class RoutesSpec extends Specification {
 
       store.getStreamCalledWith must beNone
       store.addStreamCalledWith must beNone
+
       response.statusCode must beEqualTo(401)
     }
 
@@ -89,6 +95,7 @@ class RoutesSpec extends Specification {
 
       store.getStreamCalledWith must beSome("user1")
       store.addStreamCalledWith must beSome("user1", "stream1")
+
       response.statusCode must beEqualTo(201)
     }
 
@@ -101,6 +108,7 @@ class RoutesSpec extends Specification {
 
       store.getStreamCalledWith must beSome("user1")
       store.addStreamCalledWith must beNone
+
       response.statusCode must beEqualTo(200)
     }
 
@@ -113,9 +121,18 @@ class RoutesSpec extends Specification {
 
       store.getStreamCalledWith must beSome("user1")
       store.addStreamCalledWith must beNone
+
       response.statusCode must beEqualTo(409)
       response.contentType must beSome("application/json")
-      response.content must not be empty
+
+      parse(response.contentString) must beEqualTo {
+        parse("""
+            {
+                "code": "streams.limit.reached",
+                "message": "This user already has the maximum number of concurrent streams."
+            }
+        """)
+      }
     }
   }
 }

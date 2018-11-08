@@ -5,8 +5,12 @@ import com.example.daznagnosticcodingchallenge.stores.Store
 import com.twitter.finagle.Service
 import com.twitter.finagle.http.{Request, Response, Status}
 import com.twitter.util.Future
+import org.json4s.DefaultFormats
+import org.json4s.native.Serialization.write
 
 case class StreamsService(store: Store, userId: String, streamId: String) extends Service[Request, Response] {
+  implicit val formats = DefaultFormats
+
   val MaximumConcurrentStreams = 3
 
   def hasStreamResponse: Future[Response] = Future.value {
@@ -20,10 +24,10 @@ case class StreamsService(store: Store, userId: String, streamId: String) extend
     val response = Response(Status.Conflict)
 
     response.contentType = "application/json"
-    response.contentString = ErrorResponse(
+    response.contentString = write(ErrorResponse(
       code = "streams.limit.reached",
       message = "This user already has the maximum number of concurrent streams."
-    ).asJson
+    ))
 
     response
   }

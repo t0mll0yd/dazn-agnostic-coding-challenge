@@ -13,6 +13,7 @@ lazy val root = (project in file("."))
       "org.specs2"         %% "specs2-core"            % "4.1.0" % "test",
       "com.twitter"        %% "finagle-http"           % "18.10.0",
       "com.github.finagle" %% "finagle-http-auth"      % "0.1.0",
+      "org.json4s"         %% "json4s-native"          % "3.6.2",
       "ch.qos.logback"     %  "logback-classic"        % "1.2.3"
     ),
     dockerUpdateLatest := true,
