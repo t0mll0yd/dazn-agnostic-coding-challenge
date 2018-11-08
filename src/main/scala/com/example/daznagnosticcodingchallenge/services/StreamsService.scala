@@ -6,15 +6,26 @@ import com.twitter.finagle.http.{Request, Response, Status}
 import com.twitter.util.Future
 
 case class StreamsService(store: Store, userId: String, streamId: String) extends Service[Request, Response] {
+  val MaximumConcurrentStreams = 3
+
+  val hasStreamResponse: Future[Response] = Future.value {
+    Response(Status.Ok)
+  }
+
+  val maxStreamsResponse: Future[Response] = Future.value {
+    Response(Status.Conflict)
+  }
+
+  def addStream(): Future[Response] =
+    store.addStream(userId, streamId).map {
+      _ => Response(Status.Created)
+    }
+
   def apply(request: Request): Future[Response] =
-    store.getStreams(userId).map(streams => {
-      if (streams.contains(streamId)) {
-        Response(Status.Ok)
-      } else if (streams.size > 2) {
-        Response(Status.Conflict)
-      } else {
-        Response(Status.Created)
-      }
+    store.getStreams(userId).flatMap(streams => {
+      if (streams.contains(streamId)) hasStreamResponse
+      else if (streams.size >= MaximumConcurrentStreams) maxStreamsResponse
+      else addStream()
     })
 
 }
