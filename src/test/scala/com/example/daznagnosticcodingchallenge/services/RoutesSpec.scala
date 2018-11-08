@@ -58,6 +58,13 @@ class RoutesSpec extends Specification {
       store.addStreamCalledWith must beNone
 
       response.statusCode must beEqualTo(200)
+      response.contentType must beSome("application/json")
+
+      parse(response.contentString) must beEqualTo {
+        parse("""
+            { "message": "Hello from the Scala/Finagle based DAZN coding challenge service!" }
+        """)
+      }
     }
 
     "GET '/users/USER_ID/streams/STREAM_ID' returns 404 NOT FOUND" in {
