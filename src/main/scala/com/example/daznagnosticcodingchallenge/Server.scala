@@ -1,19 +1,12 @@
 package com.example.daznagnosticcodingchallenge
 
-import com.twitter.finagle.{Http, Service}
-import com.twitter.finagle.http
-import com.twitter.util.{Await, Future}
+import com.example.daznagnosticcodingchallenge.services.Routes
+import com.twitter.finagle.Http
+import com.twitter.util.Await
 
 object Server extends App {
-  val service = new Service[http.Request, http.Response] {
-    def apply(req: http.Request): Future[http.Response] =
-      Future.value {
-        val response = http.Response()
-        response.contentString = """{ "hello": "world" }"""
-        response.contentType = "application/json"
-        response
-      }
+
+  Await.ready {
+    Http.serve(":8080", Routes.makeService())
   }
-  val server = Http.serve(":8080", service)
-  Await.ready(server)
 }
