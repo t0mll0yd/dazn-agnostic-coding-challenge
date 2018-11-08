@@ -114,6 +114,8 @@ class RoutesSpec extends Specification {
       store.getStreamCalledWith must beSome("user1")
       store.addStreamCalledWith must beNone
       response.statusCode must beEqualTo(409)
+      response.contentType must beSome("application/json")
+      response.content must not be empty
     }
   }
 }
