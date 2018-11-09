@@ -135,8 +135,10 @@ class RoutesSpec extends Specification {
       parse(response.contentString) must beEqualTo {
         parse("""
             {
-                "code": "streams.limit.reached",
-                "message": "This user already has the maximum number of concurrent streams."
+                "error": {
+                    "code": "streams.limit.reached",
+                    "message": "This user already has the maximum number of concurrent streams."
+                }
             }
         """)
       }

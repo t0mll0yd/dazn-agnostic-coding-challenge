@@ -1,6 +1,6 @@
 package com.example.daznagnosticcodingchallenge.services
 
-import com.example.daznagnosticcodingchallenge.responses.ErrorResponse
+import com.example.daznagnosticcodingchallenge.responses.{Error, ErrorResponse}
 import com.example.daznagnosticcodingchallenge.stores.Store
 import com.twitter.finagle.Service
 import com.twitter.finagle.http.{Request, Response, Status}
@@ -24,9 +24,12 @@ case class StreamsService(store: Store, userId: String, streamId: String) extend
     val response = Response(Status.Conflict)
 
     response.contentType = "application/json"
+
     response.contentString = write(ErrorResponse(
-      code = "streams.limit.reached",
-      message = "This user already has the maximum number of concurrent streams."
+      error = Error(
+        code = "streams.limit.reached",
+        message = "This user already has the maximum number of concurrent streams.",
+      )
     ))
 
     response

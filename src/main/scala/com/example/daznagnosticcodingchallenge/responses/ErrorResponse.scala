@@ -1,3 +1,4 @@
 package com.example.daznagnosticcodingchallenge.responses
 
-case class ErrorResponse(code: String, message: String)
+case class Error(code: String, message: String)
+case class ErrorResponse(error: Error)
