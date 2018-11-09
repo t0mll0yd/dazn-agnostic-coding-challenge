@@ -83,7 +83,7 @@ Given more time, here are some other things I would have done:
 - The basic auth should be replaced with a more sophisticated authentication mechanism, such as OAuth2.
 - The console logs should be replaced with a logger that can produce ELK logs (or similar). This would allow querying, as well as the possibility of setting up alerts.
 - The in-memory store for user streams should be replaced by a proper database backend. Currently, if you restart the server, everything is lost. Woops!
-- Auto-generate API documentation using Swagger
+- Auto-generate API documentation using Swagger.
 
 
 [0]: https://github.com/t0mll0yd/dazn-node-js-coding-challenge
